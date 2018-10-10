@@ -1,12 +1,14 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var methodOverride = require("method-override");
 
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect("mongodb://localhost/youvlog_app", {useNewUrlParser: true});
 app.set("view engine", "ejs");
+app.use(methodOverride('_method'));
 
 // creating a vlog schema with mongoose
 var vlogSchema = mongoose.Schema({
@@ -78,17 +80,36 @@ app.get("/entries/:id", function(req, res) {
 
 // EDIT ROUTE
 app.get("/entries/:id/edit", function(req, res) {
-    res.send("THIS IS THE EDIT PAGE");
+    Vlog.findById(req.params.id, function(err, foundEntry) {
+        if (err) {
+            res.redirect("/entries/" + req.params.id);
+        } else {
+            res.render("edit", {entry: foundEntry});
+        }
+    });
 });
 
 // UPDATE ROUTE
 app.put("/entries/:id", function(req, res) {
-    res.send("THIS IS THE UPDATE PAGE");
+    var newData = req.body.entry;
+    Vlog.findByIdAndUpdate(req.params.id, newData, function(err, updatedEntry) {
+        if (err) {
+            res.redirect("/entries/" + req.params.id + "/edit");
+        } else {
+            res.redirect("/entries/" + req.params.id);
+        }
+    });
 });
 
 // DESTROY ROUTE
-app.delete("/entries", function(req, res) {
-    res.send("THIS IS THE DELETE PAGE");
+app.delete("/entries/:id", function(req, res) {
+    Vlog.findByIdAndRemove(req.params.id, function(err) {
+        if (err) {
+            res.redirect("/entries/" + req.params.id);
+        } else {
+            res.redirect("/entries");
+        }
+    });
 });
 
 

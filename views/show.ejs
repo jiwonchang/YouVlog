@@ -1,8 +1,18 @@
 <% include ./partials/header %>
 
+<a href="/entries">Go Back to Entries</a>
+
 <h1><%= entry.title %></h1>
 <h4><%= entry.created.toDateString() %></h4>
 <iframe width="420" height="315" src="<%= 'https:\/\/www.youtube.com/embed/'+ entry.video.substring(32) %>"></iframe>
 <p><%= entry.content %></p>
+
+<form action="/entries/<%= entry._id %>/edit" method="GET">
+    <button>Edit</button>
+</form>
+
+<form action="/entries/<%= entry._id %>?_method=DELETE" method="POST">
+    <button>Remove</button>
+</form>
 
 <% include ./partials/footer %>
