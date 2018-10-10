@@ -1,0 +1,15 @@
+<% include ./partials/header %>
+
+<h1>Create a New Vlog</h1>
+
+<form action="/entries" method="POST">
+    <label for="title">Title</label>
+    <input id="title" name="entry[title]" type="text" placeholder="Title">
+    <label for="video">Youtube URL</label>
+    <input id="video" name="entry[video]" type="text" placeholder="Youtube URL">
+    <label for="content">Content</label>
+    <textarea id="content" name="entry[content]"></textarea>
+    <button>Upload Entry</button>
+</form>
+
+<% include ./partials/footer %>
